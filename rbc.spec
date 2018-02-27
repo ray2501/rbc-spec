@@ -6,11 +6,11 @@ Name:           rbc
 BuildRequires:  autoconf
 BuildRequires:  make
 BuildRequires:  gcc
-BuildRequires:  tcl-devel
-BuildRequires:  tk-devel
+BuildRequires:  tcl-devel >= 8.4
+BuildRequires:  tk-devel >= 8.4
 BuildRequires:  libX11-6
-Requires:       tcl
-Requires:       tk
+Requires:       tcl >= 8.4
+Requires:       tk >= 8.4
 License:        BSD 3-Clause
 Group:          Development/Libraries/Tcl
 Version:        0.1.1
@@ -32,7 +32,7 @@ Summary:        Development files for RBC toolkit.
 Group:          Development/Libraries/Tcl
 Requires:       %{name} = %{version}
 
-%description devel-static
+%description devel
 This package holds the development files for RBC toolkit.
 
 %prep
