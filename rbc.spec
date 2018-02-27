@@ -22,7 +22,7 @@ Source0:        rbc-%{version}.tar.gz
 Patch0:         configure.patch
 
 %description
-RBC is an extension to the Tk toolkit, include BLT's vector, graph,
+RBC is an extension to the Tk toolkit. It has BLT's vector, graph,
 barchart, stripchart, winop, and eps components.
 
 Now it is alpha release.
