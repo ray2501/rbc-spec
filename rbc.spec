@@ -27,13 +27,13 @@ barchart, stripchart, winop, and eps components.
 
 Now it is alpha release.
 
-%package devel-static
-Summary:        Development files for statically link RBC toolkit.
+%package devel
+Summary:        Development files for RBC toolkit.
 Group:          Development/Libraries/Tcl
 Requires:       %{name} = %{version}
 
 %description devel-static
-This package holds the development files for statically linking RBC toolkit.
+This package holds the development files for RBC toolkit.
 
 %prep
 %setup -q -n rbc
@@ -59,7 +59,7 @@ rm -rf %buildroot
 %{_libdir}/librbc0.1.1.so
 %tclscriptdir/%{name}%{version}
 
-%files devel-static
+%files devel
 %defattr(-,root,root,-)
 /usr/include/rbcStubLib.c
 %{_libdir}/librbcstub0.1.1.a
