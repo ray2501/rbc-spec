@@ -1,0 +1,87 @@
+--- configure.in	2018-02-26 23:16:49.216965871 +0800
++++ configure.in	2018-02-26 23:40:30.169238588 +0800
+@@ -69,9 +69,9 @@
+ TEA_ADD_SOURCES([rbcAlloc.c rbcBind.c rbcBusy.c rbcCanvEps.c rbcChain.c rbcColor.c rbcConfig.c rbcGraph.c rbcGrAxis.c rbcGrBar.c rbcGrElem.c rbcGrGrid.c rbcGrHairs.c rbcGrLegd.c rbcGrLine.c rbcGrMarker.c rbcGrMisc.c rbcGrPen.c rbcGrPs.c rbcImage.c rbcInt.c rbcList.c rbcParse.c rbcPs.c rbcSpline.c rbcSwitch.c rbcText.c rbcTile.c rbcUtil.c rbcVecMath.c rbcVecObjCmd.c rbcVector.c rbcWindow.c rbcWinop.c rbcStubInit.c])
+ TEA_ADD_HEADERS([])
+ TEA_ADD_INCLUDES([])
+-TEA_ADD_LIBS([])
++TEA_ADD_LIBS([-lX11])
+ TEA_ADD_CFLAGS([])
+-TEA_ADD_STUB_SOURCES([rbcStubLib.c])
++TEA_ADD_STUB_SOURCES([generic/rbcStubLib.c])
+ TEA_ADD_TCL_SOURCES([library/graph.tcl library/rbcCanvEps.pro library/rbcGraph.pro])
+ 
+ 
+--- Makefile.in.orig	2018-02-27 07:57:48.599853000 +0800
++++ Makefile.in	2018-02-27 07:59:33.491871900 +0800
+@@ -214,7 +214,7 @@
+ 
+ #  We don't have any docs to install, yet
+ #install: all install-binaries install-libraries install-doc
+-install: all install-binaries install-libraries install-demos
++install: all install-binaries install-libraries
+ 
+ install-binaries: binaries install-lib-binaries install-bin-binaries
+ 
+@@ -395,18 +395,19 @@
+ #========================================================================
+ 
+ install-lib-binaries: binaries
++	@mkdir -p $(DESTDIR)$(libdir)
+ 	@mkdir -p $(DESTDIR)$(pkglibdir)
+ 	@list='$(lib_BINARIES)'; for p in $$list; do \
+ 	  if test -f $$p; then \
+-	    echo " $(INSTALL_LIBRARY) $$p $(DESTDIR)$(pkglibdir)/$$p"; \
+-	    $(INSTALL_LIBRARY) $$p $(DESTDIR)$(pkglibdir)/$$p; \
++	    echo " $(INSTALL_LIBRARY) $$p $(DESTDIR)$(libdir)/$$p"; \
++	    $(INSTALL_LIBRARY) $$p $(DESTDIR)$(libdir)/$$p; \
+ 	    stub=`echo $$p|sed -e "s/.*\(stub\).*/\1/"`; \
+ 	    if test "x$$stub" = "xstub"; then \
+-		echo " $(RANLIB_STUB) $(DESTDIR)$(pkglibdir)/$$p"; \
+-		$(RANLIB_STUB) $(DESTDIR)$(pkglibdir)/$$p; \
++		echo " $(RANLIB_STUB) $(DESTDIR)$(libdir)/$$p"; \
++		$(RANLIB_STUB) $(DESTDIR)$(libdir)/$$p; \
+ 	    else \
+-		echo " $(RANLIB) $(DESTDIR)$(pkglibdir)/$$p"; \
+-		$(RANLIB) $(DESTDIR)$(pkglibdir)/$$p; \
++		echo " $(RANLIB) $(DESTDIR)$(libdir)/$$p"; \
++		$(RANLIB) $(DESTDIR)$(libdir)/$$p; \
+ 	    fi; \
+ 	    ext=`echo $$p|sed -e "s/.*\.//"`; \
+ 	    if test "x$$ext" = "xdll"; then \
+--- pkgIndex.tcl.in.orig	2018-02-27 00:45:16.694206442 +0800
++++ pkgIndex.tcl.in	2018-02-27 00:46:45.798230273 +0800
+@@ -1,6 +1,6 @@
+ package ifneeded @PACKAGE_NAME@ @PACKAGE_VERSION@ "
+     # This package always requires Tk
+     [list package require Tk]
+-    [list load [file join $dir @PKG_LIB_FILE@]]
++    [list load @PKG_LIB_FILE@ rbc]
+     [list source [file join $dir graph.tcl]]
+ "
+--- generic/rbc.h.orig	2018-02-27 00:54:55.558361014 +0800
++++ generic/rbc.h	2018-02-27 00:55:07.642364246 +0800
+@@ -13,9 +13,7 @@
+ #ifndef _RBC
+ #define _RBC
+ 
+-#define RBC_VERSION "0.1"
+-#define RBC_MAJOR_VERSION 0
+-#define RBC_MINOR_VERSION 1
++#define RBC_VERSION PACKAGE_VERSION /* Defined via command line C macro */
+ 
+ #include <tcl.h>
+ 
+--- generic/rbcInt.c.orig	2018-02-22 13:54:24.000000000 +0800
++++ generic/rbcInt.c	2018-02-27 08:40:42.861752319 +0800
+@@ -103,10 +103,6 @@
+         return TCL_ERROR;
+     }
+ 
+-    if (Tcl_PkgProvide(interp, "rbc", "0.1") == TCL_ERROR) {
+-        return TCL_ERROR;
+-    }
+-
+     nsPtr = Tcl_CreateNamespace(interp, "rbc", NULL, NULL);
+     if (nsPtr == NULL) {
+ 	    return TCL_ERROR;
