@@ -48,7 +48,7 @@ CFLAGS="%optflags -fno-strict-aliasing" \
 make
 
 %install
-make DESTDIR=%{buildroot} pkglibdir=%tclscriptdir/%{name}%{version} install
+make DESTDIR=%{buildroot} pkglibdir=%tcl_noarchdir/%{name}%{version} install
 
 %clean
 rm -rf %buildroot
@@ -57,7 +57,7 @@ rm -rf %buildroot
 %defattr(-,root,root)
 %doc README license.terms ChangeLog
 %{_libdir}/librbc0.1.1.so
-%tclscriptdir/%{name}%{version}
+%tcl_noarchdir/%{name}%{version}
 
 %files devel
 %defattr(-,root,root,-)
