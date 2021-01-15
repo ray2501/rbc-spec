@@ -11,7 +11,7 @@ BuildRequires:  tk-devel >= 8.4
 BuildRequires:  libX11-6
 Requires:       tcl >= 8.4
 Requires:       tk >= 8.4
-License:        BSD 3-Clause
+License:        BSD-3-Clause
 Group:          Development/Libraries/Tcl
 Version:        0.1.1
 Release:        0
